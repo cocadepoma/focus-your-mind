@@ -1,0 +1,21 @@
+{
+  "name": "Drink Water Event Popup",
+  "description": "Demonstrates usage and features of the event page by reminding user to drink water",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "permissions": [
+    "alarms",
+    "notifications",
+    "storage",
+    "tabs"
+  ],
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Focus your mind"
+  },
+  "icons": {
+    "16": "./img/icon16.png",
+    "48": "./img/icon48.png",
+    "128": "./img/icon128.png"
+  }
+}
