@@ -6,11 +6,11 @@ export const getBackgroundGif = ({ type, status }: { type: State, status: Status
   }
 
   if (type === 'pending' && status === 'resting') {
-    return `linear-gradient(to bottom, rgba(18,42, 66, .85), rgba(18,42, 66, .85)), url("./img/cyberpunk.webp")`;
+    return `linear-gradient(to bottom, rgba(18,42, 66, .85), rgba(18,42, 66, .85)), url("./img/rest.gif")`;
   }
 
   if (status === 'focusing' && type === 'finish') {
-    return `linear-gradient(to bottom, rgba(66,63, 18, .85), rgba(66,63, 18, .85)), url("./img/minion.webp")`;
+    return `linear-gradient(to bottom, rgba(66,63, 18, .85), rgba(66,63, 18, .85)), url("./img/finish.gif")`;
   }
 
   return `linear-gradient(to right,rgb(5 78 19 / 70%), rgb(1 56 20 / 87%)), url(./img/pattern.png)`;

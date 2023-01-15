@@ -15,7 +15,7 @@ chrome.alarms.onAlarm.addListener(({ name }) => {
       focused: true,
       top: 300,
       left: 300,
-      height: 100,
+      height: 120,
       width: 300,
       url,
     });
@@ -33,7 +33,7 @@ chrome.alarms.onAlarm.addListener(({ name }) => {
       focused: true,
       top: 300,
       left: 300,
-      height: 100,
+      height: 120,
       width: 300,
       url,
     });

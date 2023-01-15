@@ -113,6 +113,17 @@ export const Home = () => {
     }
   };
 
+  const handleStopFocus = () => {
+    chrome.alarms.clearAll();
+
+    setBadgeIconByColor('yellow');
+    setAppTime(Date.now());
+
+    chrome.storage.local.set({ status: 'focusing' });
+    chrome.storage.local.set({ type: 'finish' });
+    chrome.storage.local.set({ time: Date.now() });
+  };
+
   const handleClearAlarms = () => {
     chrome.alarms.clearAll();
 
@@ -179,8 +190,8 @@ export const Home = () => {
       {
         appState.type === 'pending' && (
           <div>
-            {appState.status === 'focusing' && <Typography sx={{ textAlign: 'center', color: 'rgba(255,255,255,0.7)' }} variant="body1">Focus Time</Typography>}
-            {appState.status === 'resting' && <Typography sx={{ textAlign: 'center', color: 'rgba(255,255,255,0.7)' }} variant="body1">Rest Time</Typography>}
+            {appState.status === 'focusing' && <Typography sx={{ fontFamily: "'VT323', monospace", textAlign: 'center', color: 'rgba(255,255,255,0.7)', userSelect: 'none', fontSize: '1.3rem' }} variant="body1">Focus Time</Typography>}
+            {appState.status === 'resting' && <Typography sx={{ fontFamily: "'VT323', monospace", textAlign: 'center', color: 'rgba(255,255,255,0.7)', userSelect: 'none', fontSize: '1.3rem' }} variant="body1">Rest Time</Typography>}
           </div>
         )
       }
@@ -199,7 +210,7 @@ export const Home = () => {
         {
           appState.status === 'focusing' && appState.type === 'finish' && (
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant="body1" sx={{ color: 'white', textAlign: 'center', marginBottom: '1rem' }}>Focus time finished, Let's take a nap!</Typography>
+              <Typography variant="body1" sx={{ fontFamily: "'VT323', monospace", color: 'white', textAlign: 'center', marginBottom: '1rem', userSelect: 'none', fontSize: '1.3rem' }}>Focus time finished</Typography>
 
               <Tooltip title={'Start Rest Time'}>
                 <IconButton size="small" onClick={handleStartRest} sx={{ color: 'white', position: 'absolute', right: 13, bottom: 10, border: '1px solid white' }}>
@@ -229,7 +240,7 @@ export const Home = () => {
         {
           appState.status === 'focusing' && appState.type === 'pending' && (
             <Tooltip title={'Skip and Rest'}>
-              <IconButton size="small" onClick={handleStartRest} sx={{ color: 'white', position: 'absolute', right: 13, bottom: 10, border: '1px solid white' }}>
+              <IconButton size="small" onClick={handleStopFocus} sx={{ color: 'white', position: 'absolute', right: 13, bottom: 10, border: '1px solid white' }}>
                 <DirectionsRunIcon fontSize="small" />
               </IconButton>
             </Tooltip>
