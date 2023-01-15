@@ -1,7 +1,7 @@
 {
   "name": "Focus your mind",
   "description": "Sets a schedule time for focusing and for resting, be productive!",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "manifest_version": 3,
   "permissions": [
     "alarms",
