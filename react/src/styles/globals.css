@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@200&family=Wallpoet&display=swap');
+
+html {
+  box-sizing: border-box;
+  font-family: 'Sofia Sans', sans-serif;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+body {
+  animation: fadeIn 0.3s;
+  width: 25rem;
+  height: 17rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

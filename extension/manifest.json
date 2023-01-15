@@ -1,21 +1,27 @@
 {
-  "name": "Drink Water Event Popup",
-  "description": "Demonstrates usage and features of the event page by reminding user to drink water",
+  "name": "Focus your mind",
+  "description": "Sets a schedule time for focusing and for resting, be productive!",
   "version": "1.0.0",
   "manifest_version": 3,
   "permissions": [
     "alarms",
     "notifications",
     "storage",
-    "tabs"
+    "tabs",
+    "activeTab",
+    "scripting"
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "action": {
-    "default_popup": "index.html",
-    "default_title": "Focus your mind"
+    "default_title": "Focus your mind",
+    "default_popup": "index.html"
   },
   "icons": {
-    "16": "./img/icon16.png",
-    "48": "./img/icon48.png",
-    "128": "./img/icon128.png"
+    "16": "./icons/green/16-green.png",
+    "32": "./icons/green/32-green.png",
+    "48": "./icons/green/48-green.png",
+    "128": "./icons/green/128-green.png"
   }
 }

@@ -1,12 +1,10 @@
-import { Home } from '../views/Home';
-import { ThemeProvider } from '../contexts';
+import { Home } from './views/Home';
+
 function App() {
 
   return (
     <div className="App">
-      <ThemeProvider>
-        <Home />
-      </ThemeProvider>
+      <Home />
     </div>
   );
 };
