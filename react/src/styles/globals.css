@@ -21,7 +21,7 @@ html {
 body {
   animation: fadeIn 0.3s;
   width: 25rem;
-  height: 17rem;
+  height: 20rem;
 }
 
 @keyframes fadeIn {

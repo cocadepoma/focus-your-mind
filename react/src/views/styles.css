@@ -1,0 +1,25 @@
+.home__container {
+  width: 25rem;
+  height: 20rem;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.1rem 1rem 1rem 1rem;
+  border: 10px solid #0000001c;
+  position: relative;
+}
+
+.home__countdown--container {
+  display: flex;
+  gap: 5px;
+  font-weight: bold;
+  font-size: 28px;
+  align-items: center;
+  justify-content: center;
+  color: #010101b5;
+  font-family: "Wallpoet", cursive;
+  background-color: rgba(255, 255, 255, 0.7);
+  width: 8rem;
+  margin: 0 auto;
+}

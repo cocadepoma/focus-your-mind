@@ -8,9 +8,10 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 
-type Status = 'focusing' | 'resting';
+import { getAppStorageStatus, getAppSyncPeriods, getBackgroundGif, setBadgeIconByColor } from "../utils/utils";
+import { State, Status } from "../types/types";
 
-type State = 'not-started' | 'pending' | 'finish';
+import './styles.css';
 
 interface AppState {
   status: Status,
@@ -30,52 +31,24 @@ export const Home = () => {
   });
 
   const [appTime, setAppTime] = useState<number>(Date.now() + 10000);
-  const [focusPeriod, setFocusPeriod] = useState('1');
-  const [restPeriod, setRestPeriod] = useState('0.5');
+  const [focusPeriod, setFocusPeriod] = useState('30');
+  const [restPeriod, setRestPeriod] = useState('5');
 
   useEffect(() => {
-    checkAppStatusColor();
+    checkAppStatus();
   }, [appTime]);
 
   useEffect(() => {
     checkAppTimer();
+    checkAppPeriods();
   }, []);
 
-  const checkAppStatusColor = async () => {
-    const params = await chrome.storage.local.get(null);
-    let color = '';
-
-    switch (params.type) {
-      case 'finish':
-        if (params.status === 'resting') {
-          setBadgeIconByColor('green');
-          color = 'rgb(31 76 58)';
-        } else {
-          setBadgeIconByColor('yellow');
-          color = 'rgb(137 116 0)';
-        }
-        break;
-      case 'pending':
-        if (params.status === 'focusing') {
-          setBadgeIconByColor('red');
-          color = 'rgb(111 13 13)';
-        } else {
-          setBadgeIconByColor('blue');
-          color = '#476db2';
-        }
-        break;
-      case 'not-started':
-        setBadgeIconByColor('green');
-        color = 'rgb(31 76 58)';
-        break;
-    }
+  const checkAppStatus = async () => {
+    const { badge, color, status, type } = await getAppStorageStatus();
 
     divRef.current!.style.backgroundColor = color;
-
-    setAppState({
-      status: params.status,
-      type: params.type,
-    });
+    setBadgeIconByColor(badge);
+    setAppState({ status, type });
   };
 
   const checkAppTimer = async () => {
@@ -86,22 +59,28 @@ export const Home = () => {
     }
   };
 
+  const checkAppPeriods = async () => {
+    const { focusPeriod, restPeriod } = await getAppSyncPeriods();
+
+    setFocusPeriod(focusPeriod);
+    setRestPeriod(restPeriod);
+  };
+
   const handleStartFocus = () => {
     const timeToWait = Number(focusPeriod) * 60 * 1000;
-    setAppState({
-      status: 'focusing',
-      type: 'pending',
-    });
-    divRef.current!.style.backgroundColor = 'rgb(111 13 13)';
+    setAppState({ status: 'focusing', type: 'pending' });
     setBadgeIconByColor('red');
+    setAppTime(() => Date.now() + timeToWait);
+
     chrome.storage.local.set({ status: 'focusing' });
     chrome.storage.local.set({ type: 'pending' });
     chrome.storage.local.set({ time: Date.now() + timeToWait });
-
     chrome.alarms.create('focus', { delayInMinutes: Number(focusPeriod) });
 
-    setAppTime(() => Date.now() + timeToWait);
+    chrome.storage.sync.set({ focusPeriod });
+    chrome.storage.sync.set({ restPeriod });
 
+    // Due to refresh countdown component, to review
     const timer = setInterval(() => {
       setAppTime(prevTime => prevTime - 1);
     }, 1000);
@@ -117,13 +96,14 @@ export const Home = () => {
     const timeToWait = Number(restPeriod) * 60 * 1000;
 
     setBadgeIconByColor('blue');
+    setAppTime(Date.now() + timeToWait);
+
     chrome.storage.local.set({ status: 'resting' });
     chrome.storage.local.set({ type: 'pending' });
     chrome.storage.local.set({ time: Date.now() + timeToWait });
-
-    setAppTime(Date.now() + timeToWait);
     chrome.alarms.create('rest', { delayInMinutes: Number(restPeriod) });
 
+    // Due to refresh countdown component, to review
     const timer = setInterval(() => {
       setAppTime(prevTime => prevTime - 1);
     }, 1000);
@@ -139,7 +119,6 @@ export const Home = () => {
     setAppState(initialState);
     setBadgeIconByColor('green');
     setAppTime(Date.now());
-    divRef.current!.style.backgroundColor = 'rgb(31 76 58)';
 
     chrome.storage.local.set({ status: 'focusing' });
     chrome.storage.local.set({ type: 'not-started' });
@@ -154,37 +133,11 @@ export const Home = () => {
     setRestPeriod(value);
   };
 
-  const getBackgroundGif = () => {
-    if (appState.type === 'pending' && appState.status === 'focusing') {
-      return `linear-gradient(to bottom, rgba(66,18, 18, .85), rgba(66,18, 18, .85)), url("./img/cyberpunk-1.gif")`;
-    }
-
-    if (appState.type === 'pending' && appState.status === 'resting') {
-      return `linear-gradient(to bottom, rgba(18,42, 66, .85), rgba(18,42, 66, .85)), url("./img/cyberpunk.gif")`;
-    }
-
-    if (appState.status === 'focusing' && appState.type === 'finish') {
-      return `linear-gradient(to bottom, rgba(66,63, 18, .85), rgba(66,63, 18, .85)), url("./img/minion.webp")`;
-    }
-  };
-
   const renderer = ({ minutes, seconds }: any) => {
     if (appState.status === 'focusing' && appState.type === 'finish') return;
 
     return (
-      <div style={{
-        display: 'flex',
-        gap: '5px',
-        fontWeight: 'bold',
-        fontSize: 30,
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#010101b5',
-        fontFamily: '"Wallpoet", cursive',
-        backgroundColor: 'rgba(255,255,255,0.7)',
-        width: '8rem',
-        margin: '0 auto',
-      }}>
+      <div className="home__countdown--container">
         <span>
           {zeroPad(minutes)}
         </span>
@@ -199,18 +152,11 @@ export const Home = () => {
   };
 
   return (
-    <div ref={divRef}
+    <div
+      ref={divRef}
+      className="home__container"
       style={{
-        width: '25rem',
-        height: '17rem',
-        backgroundColor: 'black',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1rem',
-        padding: '1.1rem 1rem 1rem 1rem',
-        border: '10px solid #0000001c',
-        position: 'relative',
-        backgroundImage: getBackgroundGif(),
+        backgroundImage: getBackgroundGif({ type: appState.type, status: appState.status }),
         backgroundPosition: 'center',
         backgroundSize: 'cover',
       }}
@@ -223,9 +169,9 @@ export const Home = () => {
       {
         ((appState.status === 'focusing' && appState.type === 'not-started') || (appState.status === 'resting' && appState.type === 'finish')) && (
           <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-            <RowRadioButtonsFocus onChange={onChangeFocusPeriod} value={focusPeriod} values={['1', '1.5', '2']} label="Focus Time" />
+            <RowRadioButtonsFocus onChange={onChangeFocusPeriod} value={focusPeriod} values={['30', '35', '40', '45']} label="Focus Time" />
             <div style={{ height: '1rem' }} />
-            <RowRadioButtonsFocus onChange={onChangeRestPeriod} value={restPeriod} values={['0.5', '1', '1.5']} label="Rest Time" />
+            <RowRadioButtonsFocus onChange={onChangeRestPeriod} value={restPeriod} values={['5', '8', '10', '15']} label="Rest Time" />
           </div>
         )
       }
@@ -242,13 +188,11 @@ export const Home = () => {
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         {
           ((appState.status === 'focusing' && appState.type === 'not-started') || (appState.status === 'resting' && appState.type === 'finish')) && (
-            <>
-              <Tooltip title={'Start Focus Time'}>
-                <IconButton size="small" onClick={handleStartFocus} sx={{ color: 'white', position: 'absolute', right: 13, bottom: 10, border: '1px solid white' }}>
-                  <PlayArrowIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            </>
+            <Tooltip title={'Start Focus Time'}>
+              <IconButton size="small" onClick={handleStartFocus} sx={{ color: 'white', position: 'absolute', right: 13, bottom: 10, border: '1px solid white' }}>
+                <PlayArrowIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
           )
         }
 
@@ -267,13 +211,17 @@ export const Home = () => {
         }
 
         <Tooltip title="Stop">
-          <IconButton size="small" onClick={handleClearAlarms} sx={{
-            color: 'white',
-            position: 'absolute',
-            right: appState.status === 'resting' && appState.type === 'pending' ? 13 : 56,
-            bottom: 10,
-            border: '1px solid white'
-          }}>
+          <IconButton
+            size="small"
+            onClick={handleClearAlarms}
+            sx={{
+              color: 'white',
+              position: 'absolute',
+              right: appState.status === 'resting' && appState.type === 'pending' ? 13 : 56,
+              bottom: 10,
+              border: '1px solid white'
+            }}
+          >
             <StopIcon fontSize="small" />
           </IconButton>
         </Tooltip>
@@ -291,15 +239,4 @@ export const Home = () => {
       </div>
     </div >
   );
-};
-
-const setBadgeIconByColor = (color: string) => {
-  chrome.action.setIcon({
-    path: {
-      "16": `./icons/${color}/16-${color}.png`,
-      "32": `./icons/${color}/32-${color}.png`,
-      "48": `./icons/${color}/48-${color}.png`,
-      "128": `./icons/${color}/128-${color}.png`,
-    }
-  });
 };
