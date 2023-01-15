@@ -7,9 +7,7 @@
     "alarms",
     "notifications",
     "storage",
-    "tabs",
-    "activeTab",
-    "scripting"
+    "tabs"
   ],
   "background": {
     "service_worker": "background.js"
