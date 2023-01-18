@@ -26,7 +26,7 @@ export const RowRadioButtonsFocus = ({ value, onChange, values, label }: Props) 
           sx={{ justifyContent: 'space-between' }}
         >
           {values.map((val, i) => (
-            <FormControlLabel sx={{ '& span': { fontSize: '1rem', color: 'white', fontFamily: "'VT323', monospace", userSelect: 'none' }, marginRight: i - 1 === values.length ? 0 : 'inherit' }} value={val} control={<Radio color='error' size='small' />} label={`${val} min.`} />
+            <FormControlLabel sx={{ '& span': { fontSize: '1.3rem', letterSpacing: '1.2px', color: 'white', fontFamily: "'VT323', monospace", userSelect: 'none' }, marginRight: i - 1 === values.length ? 0 : 'inherit' }} value={val} control={<Radio color='error' size='small' />} label={`${val} min.`} />
           ))}
         </RadioGroup>
       </FormControl>

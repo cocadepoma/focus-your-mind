@@ -1,8 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=VT323&family=Wallpoet&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
 html {
   box-sizing: border-box;
   font-family: 'VT323', monospace;
+  letter-spacing: 1.2px !important;
 }
 
 *,
@@ -12,7 +13,7 @@ html {
 }
 
 :root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'VT323', monospace;
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;

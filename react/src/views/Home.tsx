@@ -12,7 +12,6 @@ import { getAppStorageStatus, getAppSyncPeriods, getBackgroundGif, setBadgeIconB
 import { State, Status } from "../types/types";
 
 import './styles.css';
-
 interface AppState {
   status: Status,
   type: State,
@@ -30,9 +29,9 @@ export const Home = () => {
     type: 'not-started',
   });
 
-  const [appTime, setAppTime] = useState<number>(Date.now() + 10000);
-  const [focusPeriod, setFocusPeriod] = useState('30');
-  const [restPeriod, setRestPeriod] = useState('5');
+  const [appTime, setAppTime] = useState<number>(Date.now() + 1000);
+  const [focusPeriod, setFocusPeriod] = useState('0.5');
+  const [restPeriod, setRestPeriod] = useState('0.5');
 
   useEffect(() => {
     checkAppStatus();
@@ -180,9 +179,9 @@ export const Home = () => {
       {
         ((appState.status === 'focusing' && appState.type === 'not-started') || (appState.status === 'resting' && appState.type === 'finish')) && (
           <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-            <RowRadioButtonsFocus onChange={onChangeFocusPeriod} value={focusPeriod} values={['30', '35', '40', '45']} label="Focus Time" />
+            <RowRadioButtonsFocus onChange={onChangeFocusPeriod} value={focusPeriod} values={['0.5', '35', '40', '45']} label="Focus Time" />
             <div style={{ height: '1rem' }} />
-            <RowRadioButtonsFocus onChange={onChangeRestPeriod} value={restPeriod} values={['5', '8', '10', '15']} label="Rest Time" />
+            <RowRadioButtonsFocus onChange={onChangeRestPeriod} value={restPeriod} values={['0.5', '8', '10', '15']} label="Rest Time" />
           </div>
         )
       }
@@ -251,3 +250,5 @@ export const Home = () => {
     </div >
   );
 };
+
+// const pa = new RegExp(`^[a-zA-Z0-9-]*$`)

@@ -17,7 +17,7 @@ export const getBackgroundGif = ({ type, status }: { type: State, status: Status
 };
 
 export const getAppStorageStatus = async () => {
-  const { type, status } = await chrome.storage.local.get(null);
+  const { type = 'not-started', status = 'focusing' } = await chrome.storage.local.get(null);
   const statusColor = {
     color: 'rgb(31 76 58)',
     badge: 'green',
