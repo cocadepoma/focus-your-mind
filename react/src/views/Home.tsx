@@ -198,9 +198,9 @@ export const Home = () => {
             {
               (isInIdle || isRestingFinished) && (
                 <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                  <RowRadioButtonsFocus onChange={onChangeFocusPeriod} value={focusPeriod} values={['0.5', '35', '40']} label="Focus Time" />
+                  <RowRadioButtonsFocus onChange={onChangeFocusPeriod} value={focusPeriod} values={['30', '35', '40']} label="Focus Time" />
                   <div style={{ height: '1rem' }} />
-                  <RowRadioButtonsFocus onChange={onChangeRestPeriod} value={restPeriod} values={['0.5', '8', '10']} label="Rest Time" />
+                  <RowRadioButtonsFocus onChange={onChangeRestPeriod} value={restPeriod} values={['5', '8', '10']} label="Rest Time" />
                 </div>
               )
             }
@@ -226,10 +226,9 @@ export const Home = () => {
         )
       }
 
-      {isURLBlockerTabEnabled && <TabUrlBlocker />}
-      {isAlarmTabEnabled && <TabAlarmSound />}
-      {isLanguageTabEnabled && <TabLanguage />}
-
+      {isURLBlockerTabEnabled && <TabUrlBlocker handleClose={() => setIsURLBlockerTabEnabled(false)} />}
+      {isAlarmTabEnabled && <TabAlarmSound handleClose={() => setIsAlarmTabEnabled(false)} />}
+      {isLanguageTabEnabled && <TabLanguage handleClose={() => setIsLanguageTabEnabled(false)} />}
 
     </div >
   );

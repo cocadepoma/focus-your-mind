@@ -1,8 +1,20 @@
-export const TabLanguage = () => {
+import { IconButton, Tooltip } from "@mui/material";
+import ForwardIcon from '@mui/icons-material/Forward';
+import { GoBackToolbar } from "./GoBackToolbar";
+
+interface Props {
+  handleClose: () => void;
+}
+
+export const TabLanguage = ({ handleClose }: Props) => {
 
   return (
     <div>
-      TabLanguage
+      <h3>
+        TabLanguage
+      </h3>
+
+      <GoBackToolbar handleClose={handleClose} />
     </div>
   );
 };

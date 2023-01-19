@@ -3,7 +3,6 @@ import { IconButton, Tooltip } from '@mui/material'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
-import SettingsIcon from '@mui/icons-material/Settings';
 import ForwardIcon from '@mui/icons-material/Forward';
 
 import HttpIcon from '@mui/icons-material/Http';
