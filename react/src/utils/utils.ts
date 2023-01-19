@@ -13,22 +13,22 @@ export const getBackgroundGif = ({ type, status }: { type: State, status: Status
     return `linear-gradient(to bottom, rgba(66,63, 18, .85), rgba(66,63, 18, .85)), url("./img/finish.gif")`;
   }
 
-  return `linear-gradient(to right,rgb(5 78 19 / 70%), rgb(1 56 20 / 87%)), url(./img/pattern.png)`;
+  return `linear-gradient(to right, rgb(54 5 78 / 70%), rgb(34 2 56 / 87%)), url(./img/pattern.png)`;
 };
 
 export const getAppStorageStatus = async () => {
   const { type = 'not-started', status = 'focusing' } = await chrome.storage.local.get(null);
   const statusColor = {
-    color: 'rgb(31 76 58)',
-    badge: 'green',
+    color: 'rgb(74 31 76)',
+    badge: 'purple',
   }
 
   switch (type) {
 
     case 'finish':
       if (status === 'resting') {
-        statusColor.color = 'rgb(31 76 58)';
-        statusColor.badge = 'green';
+        statusColor.color = 'rgb(74 31 76)';
+        statusColor.badge = 'purple';
       } else {
         statusColor.color = 'rgb(137 116 0)';
         statusColor.badge = 'yellow';
@@ -47,8 +47,8 @@ export const getAppStorageStatus = async () => {
 
     case 'not-started':
     default:
-      statusColor.color = 'rgb(31 76 58)';
-      statusColor.badge = 'green';
+      statusColor.color = 'rgb(74 31 76)';
+      statusColor.badge = 'purple';
       break;
   }
 

@@ -99,21 +99,26 @@ export const ActionButtons = ({
         )
       }
 
-      <Tooltip title="Stop">
-        <IconButton
-          size="small"
-          onClick={handleClearAlarms}
-          sx={{
-            color: 'white',
-            position: 'absolute',
-            right: isResting && isPending ? 8 : 45,
-            bottom: 1,
-            animation: 'fadeIn 0.3s'
-          }}
-        >
-          <StopIcon fontSize="small" />
-        </IconButton>
-      </Tooltip>
+      {
+        (!isInIdle && !isRestingFinished) && (
+          <Tooltip title="Stop">
+            <IconButton
+              size="small"
+              onClick={handleClearAlarms}
+              sx={{
+                color: 'white',
+                position: 'absolute',
+                right: isResting && isPending ? 8 : 45,
+                bottom: 1,
+                animation: 'fadeIn 0.3s'
+              }}
+            >
+              <StopIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        )
+      }
+
 
       {
         isFocusing && isPending && (

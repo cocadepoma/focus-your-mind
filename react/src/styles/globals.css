@@ -34,3 +34,15 @@ body {
     opacity: 1;
   }
 }
+
+.MuiButtonBase-root.MuiRadio-root.MuiRadio-colorError.Mui-checked {
+  color: #f292fa8f;
+}
+
+.MuiButtonBase-root.MuiRadio-root.MuiRadio-colorError.Mui-checked svg:first-child {
+  color: #ffffff;
+}
+
+.PrivateSwitchBase-root.MuiRadio-root.MuiRadio-colorError {
+  color: rgb(0 0 0 / 45%)
+}

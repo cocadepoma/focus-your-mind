@@ -20,9 +20,9 @@
     "default_popup": "index.html"
   },
   "icons": {
-    "16": "./icons/green/16-green.png",
-    "32": "./icons/green/32-green.png",
-    "48": "./icons/green/48-green.png",
-    "128": "./icons/green/128-green.png"
+    "16": "./icons/purple/16-purple.png",
+    "32": "./icons/purple/32-purple.png",
+    "48": "./icons/purple/48-purple.png",
+    "128": "./icons/purple/128-purple.png"
   }
 }

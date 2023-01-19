@@ -133,7 +133,7 @@ export const Home = () => {
     chrome.alarms.clearAll();
 
     setAppState(initialState);
-    setBadgeIconByColor('green');
+    setBadgeIconByColor('purple');
     setAppTime(Date.now());
 
     chrome.storage.local.set({ status: 'focusing' });

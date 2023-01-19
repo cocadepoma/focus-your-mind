@@ -21,7 +21,7 @@ chrome.alarms.onAlarm.addListener(({ name }) => {
     chrome.storage.local.set({ status: 'resting' });
     chrome.storage.local.set({ type: 'finish' });
 
-    url += '?volume=0.8&src=./sounds/src_tones_ping1.mp3&length=10000&icon=green&text=Time+to+focus';
+    url += '?volume=0.8&src=./sounds/src_tones_ping1.mp3&length=10000&icon=purple&text=Time+to+focus';
 
     chrome.tabs.create({
       active: true,
