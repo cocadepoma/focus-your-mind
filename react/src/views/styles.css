@@ -1,13 +1,14 @@
 .home__container {
   width: 25rem;
-  height: 20rem;
+  height: 18.5rem;
   background-color: black;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 0.8rem;
-  border: 10px solid #0000001c;
+  padding: 0.5rem 0.8rem 0.8rem 0.8rem;
+  border: 5px solid #0000001c;
   position: relative;
+  animation: fadeIn 0.3s;
 }
 
 .home__countdown--container {

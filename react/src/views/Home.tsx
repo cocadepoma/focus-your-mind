@@ -1,15 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 
-import { IconButton, Tooltip, Typography } from "@mui/material";
 import Countdown, { zeroPad } from "react-countdown";
 
 import { RowRadioButtonsFocus } from "../components/RadioButtonsFocus";
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import StopIcon from '@mui/icons-material/Stop';
-import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 
 import { getAppStorageStatus, getAppSyncPeriods, getBackgroundGif, setBadgeIconByColor } from "../utils/utils";
 import { State, Status } from "../types/types";
+
+import { InfoText } from "../components/InfoText";
+import { ActionButtons } from "../components/ActionButtons";
+
+import { TabUrlBlocker } from "../components/TabUrlBlocker";
+import { TabAlarmSound } from "../components/TabAlarmSound";
+import { TabLanguage } from "../components/TabLanguage";
 
 import './styles.css';
 interface AppState {
@@ -32,6 +35,9 @@ export const Home = () => {
   const [appTime, setAppTime] = useState<number>(Date.now() + 1000);
   const [focusPeriod, setFocusPeriod] = useState('0.5');
   const [restPeriod, setRestPeriod] = useState('0.5');
+  const [isURLBlockerTabEnabled, setIsURLBlockerTabEnabled] = useState(false);
+  const [isLanguageTabEnabled, setIsLanguageTabEnabled] = useState(false);
+  const [isAlarmTabEnabled, setIsAlarmTabEnabled] = useState(false);
 
   useEffect(() => {
     checkAppStatus();
@@ -161,6 +167,16 @@ export const Home = () => {
     )
   };
 
+  const isFocusing = appState.status === 'focusing';
+  const isResting = appState.status === 'resting';
+
+  const isNotStarted = appState.type === 'not-started';
+  const isPending = appState.type === 'pending';
+  const isFinished = appState.type === 'finish';
+
+  const isInIdle = (isFocusing && isNotStarted);
+  const isRestingFinished = (isResting && isFinished)
+
   return (
     <div
       ref={divRef}
@@ -171,82 +187,50 @@ export const Home = () => {
         backgroundSize: 'cover',
       }}
     >
-      <Countdown
-        date={appTime}
-        renderer={renderer}
-      />
-
       {
-        ((appState.status === 'focusing' && appState.type === 'not-started') || (appState.status === 'resting' && appState.type === 'finish')) && (
-          <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-            <RowRadioButtonsFocus onChange={onChangeFocusPeriod} value={focusPeriod} values={['0.5', '35', '40', '45']} label="Focus Time" />
-            <div style={{ height: '1rem' }} />
-            <RowRadioButtonsFocus onChange={onChangeRestPeriod} value={restPeriod} values={['0.5', '8', '10', '15']} label="Rest Time" />
-          </div>
+        !isAlarmTabEnabled && !isURLBlockerTabEnabled && !isLanguageTabEnabled && (
+          <>
+            <Countdown
+              date={appTime}
+              renderer={renderer}
+            />
+
+            {
+              (isInIdle || isRestingFinished) && (
+                <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                  <RowRadioButtonsFocus onChange={onChangeFocusPeriod} value={focusPeriod} values={['0.5', '35', '40']} label="Focus Time" />
+                  <div style={{ height: '1rem' }} />
+                  <RowRadioButtonsFocus onChange={onChangeRestPeriod} value={restPeriod} values={['0.5', '8', '10']} label="Rest Time" />
+                </div>
+              )
+            }
+
+            <InfoText isFocusing={isFocusing} isResting={isResting} isFinished={isFinished} isPending={isPending} />
+
+            <ActionButtons
+              handleClearAlarms={handleClearAlarms}
+              handleStartRest={handleStartRest}
+              handleStopFocus={handleStopFocus}
+              handleStartFocus={handleStartFocus}
+              isInIdle={isInIdle}
+              isRestingFinished={isRestingFinished}
+              isFinished={isFinished}
+              isFocusing={isFocusing}
+              isPending={isPending}
+              isResting={isResting}
+              handleOpenURLTab={() => setIsURLBlockerTabEnabled(true)}
+              handleOpenAlarmTab={() => setIsAlarmTabEnabled(true)}
+              handleOpenLanguageTab={() => setIsLanguageTabEnabled(true)}
+            />
+          </>
         )
       }
 
-      {
-        appState.type === 'pending' && (
-          <div>
-            {appState.status === 'focusing' && <Typography sx={{ fontFamily: "'VT323', monospace", textAlign: 'center', color: 'rgba(255,255,255,0.7)', userSelect: 'none', fontSize: '1.3rem' }} variant="body1">Focus Time</Typography>}
-            {appState.status === 'resting' && <Typography sx={{ fontFamily: "'VT323', monospace", textAlign: 'center', color: 'rgba(255,255,255,0.7)', userSelect: 'none', fontSize: '1.3rem' }} variant="body1">Rest Time</Typography>}
-          </div>
-        )
-      }
+      {isURLBlockerTabEnabled && <TabUrlBlocker />}
+      {isAlarmTabEnabled && <TabAlarmSound />}
+      {isLanguageTabEnabled && <TabLanguage />}
 
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        {
-          ((appState.status === 'focusing' && appState.type === 'not-started') || (appState.status === 'resting' && appState.type === 'finish')) && (
-            <Tooltip title={'Start Focus Time'}>
-              <IconButton size="small" onClick={handleStartFocus} sx={{ color: 'white', position: 'absolute', right: 13, bottom: 10, border: '1px solid white' }}>
-                <PlayArrowIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          )
-        }
 
-        {
-          appState.status === 'focusing' && appState.type === 'finish' && (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant="body1" sx={{ fontFamily: "'VT323', monospace", color: 'white', textAlign: 'center', marginBottom: '1rem', userSelect: 'none', fontSize: '1.3rem' }}>Focus time finished</Typography>
-
-              <Tooltip title={'Start Rest Time'}>
-                <IconButton size="small" onClick={handleStartRest} sx={{ color: 'white', position: 'absolute', right: 13, bottom: 10, border: '1px solid white' }}>
-                  <PlayArrowIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            </div>
-          )
-        }
-
-        <Tooltip title="Stop">
-          <IconButton
-            size="small"
-            onClick={handleClearAlarms}
-            sx={{
-              color: 'white',
-              position: 'absolute',
-              right: appState.status === 'resting' && appState.type === 'pending' ? 13 : 56,
-              bottom: 10,
-              border: '1px solid white'
-            }}
-          >
-            <StopIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-
-        {
-          appState.status === 'focusing' && appState.type === 'pending' && (
-            <Tooltip title={'Skip and Rest'}>
-              <IconButton size="small" onClick={handleStopFocus} sx={{ color: 'white', position: 'absolute', right: 13, bottom: 10, border: '1px solid white' }}>
-                <DirectionsRunIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          )
-        }
-
-      </div>
     </div >
   );
 };
