@@ -11,6 +11,10 @@
   animation: fadeIn 0.3s;
 }
 
+.home__countdown {
+  animation: fadeIn 0.3s,
+}
+
 .home__countdown--container {
   display: flex;
   gap: 5px;
@@ -24,4 +28,5 @@
   width: 8rem;
   margin: 0 auto;
   letter-spacing: 1.5px;
+  animation: fadeIn 0.3s;
 }

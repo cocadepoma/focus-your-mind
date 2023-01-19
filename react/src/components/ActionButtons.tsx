@@ -66,7 +66,7 @@ export const ActionButtons = ({
               </IconButton>
             </Tooltip>
 
-            <Tooltip title="Alarms">
+            <Tooltip title="Sounds">
               <IconButton size="small" onClick={handleOpenAlarmTab} sx={{ color: 'white', position: 'absolute', left: 45, bottom: 1, animation: 'fadeIn 0.3s' }}>
                 <VolumeUpIcon fontSize="small" />
               </IconButton>

@@ -33,11 +33,21 @@ export const Home = () => {
   });
 
   const [appTime, setAppTime] = useState<number>(Date.now() + 1000);
-  const [focusPeriod, setFocusPeriod] = useState('0.5');
-  const [restPeriod, setRestPeriod] = useState('0.5');
+  const [focusPeriod, setFocusPeriod] = useState('30');
+  const [restPeriod, setRestPeriod] = useState('5');
   const [isURLBlockerTabEnabled, setIsURLBlockerTabEnabled] = useState(false);
   const [isLanguageTabEnabled, setIsLanguageTabEnabled] = useState(false);
   const [isAlarmTabEnabled, setIsAlarmTabEnabled] = useState(false);
+
+  const isFocusing = appState.status === 'focusing';
+  const isResting = appState.status === 'resting';
+
+  const isNotStarted = appState.type === 'not-started';
+  const isPending = appState.type === 'pending';
+  const isFinished = appState.type === 'finish';
+
+  const isInIdle = (isFocusing && isNotStarted);
+  const isRestingFinished = (isResting && isFinished);
 
   useEffect(() => {
     checkAppStatus();
@@ -149,8 +159,9 @@ export const Home = () => {
     setRestPeriod(value);
   };
 
-  const renderer = ({ minutes, seconds }: any) => {
-    if (appState.status === 'focusing' && appState.type === 'finish') return;
+  const renderer = ({ minutes, seconds }: { minutes: string | number, seconds: string | number }) => {
+    if (isFocusing && isFinished) return;
+    if (isInIdle || isRestingFinished) return;
 
     return (
       <div className="home__countdown--container">
@@ -167,16 +178,6 @@ export const Home = () => {
     )
   };
 
-  const isFocusing = appState.status === 'focusing';
-  const isResting = appState.status === 'resting';
-
-  const isNotStarted = appState.type === 'not-started';
-  const isPending = appState.type === 'pending';
-  const isFinished = appState.type === 'finish';
-
-  const isInIdle = (isFocusing && isNotStarted);
-  const isRestingFinished = (isResting && isFinished)
-
   return (
     <div
       ref={divRef}
@@ -191,17 +192,31 @@ export const Home = () => {
         !isAlarmTabEnabled && !isURLBlockerTabEnabled && !isLanguageTabEnabled && (
           <>
             <Countdown
+              className="home__countdown"
               date={appTime}
               renderer={renderer}
             />
 
             {
               (isInIdle || isRestingFinished) && (
-                <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                  <RowRadioButtonsFocus onChange={onChangeFocusPeriod} value={focusPeriod} values={['30', '35', '40']} label="Focus Time" />
-                  <div style={{ height: '1rem' }} />
-                  <RowRadioButtonsFocus onChange={onChangeRestPeriod} value={restPeriod} values={['5', '8', '10']} label="Rest Time" />
-                </div>
+                <>
+                  <div className="home__countdown--container">
+                    <span>
+                      {zeroPad(focusPeriod)}
+                    </span>
+                    <span style={{ paddingBottom: 2 }}>
+                      :
+                    </span>
+                    <span>
+                      {zeroPad(0)}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                    <RowRadioButtonsFocus onChange={onChangeFocusPeriod} value={focusPeriod} values={['30', '35', '40']} label="Focus Time" />
+                    <div style={{ height: '1rem' }} />
+                    <RowRadioButtonsFocus onChange={onChangeRestPeriod} value={restPeriod} values={['5', '8', '10']} label="Rest Time" />
+                  </div>
+                </>
               )
             }
 

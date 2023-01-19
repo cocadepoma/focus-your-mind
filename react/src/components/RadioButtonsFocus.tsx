@@ -27,7 +27,11 @@ export const RowRadioButtonsFocus = ({ value, onChange, values, label }: Props) 
         >
           {values.map((val, i) => (
             <FormControlLabel
+              key={`${val}-${i}`}
               sx={{
+                '& .PrivateSwitchBase-root:hover': {
+                  backgroundColor: 'rgb(244 176 243 / 11%)'
+                },
                 '& span.MuiFormControlLabel-label': { fontSize: '1.3rem', letterSpacing: '1.2px', fontFamily: "'VT323', monospace", userSelect: 'none', color: 'white' },
                 marginRight: i - 1 === values.length ? 0 : 'inherit'
               }}
