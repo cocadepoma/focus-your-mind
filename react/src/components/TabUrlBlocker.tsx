@@ -87,16 +87,18 @@ export const TabUrlBlocker = ({ handleClose }: Props) => {
         ...switchState,
         isWhiteListEnabled: !switchState.isWhiteListEnabled,
       });
-    } else {
-      setSwitchState({
-        ...switchState,
-        isBlackListEnabled: !switchState.isBlackListEnabled
-      });
-      chrome.storage.sync.set({
-        ...switchState,
-        isBlackListEnabled: !switchState.isBlackListEnabled
-      });
+      return;
     }
+
+    setSwitchState({
+      ...switchState,
+      isBlackListEnabled: !switchState.isBlackListEnabled
+    });
+    chrome.storage.sync.set({
+      ...switchState,
+      isBlackListEnabled: !switchState.isBlackListEnabled
+    });
+
   };
 
   const handleStartClose = () => {
