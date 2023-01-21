@@ -54,14 +54,14 @@ span.MuiTypography-body1.MuiFormControlLabel-label {
 }
 
 .tab-url-blocker__container .MuiIconButton-root.MuiIconButton-sizeSmall,
-.blacklist__container .MuiIconButton-root.MuiIconButton-sizeSmall,
-.whitelist__container .MuiIconButton-root.MuiIconButton-sizeSmall {
+.blacklist__form .MuiIconButton-root.MuiIconButton-sizeSmall,
+.whitelist__form .MuiIconButton-root.MuiIconButton-sizeSmall {
   background-color: #f6e0e02b;
 }
 
 .tab-url-blocker__container .MuiIconButton-root.Mui-disabled.MuiIconButton-sizeSmall,
-.blacklist__container .MuiIconButton-root.Mui-disabled.MuiIconButton-sizeSmall,
-.blacklist__container .MuiIconButton-root.Mui-disabled.MuiIconButton-sizeSmall {
+.blacklist__form .MuiIconButton-root.Mui-disabled.MuiIconButton-sizeSmall,
+.whitelist__form .MuiIconButton-root.Mui-disabled.MuiIconButton-sizeSmall {
   background-color: #f6e0e008;
   color: rgb(255 255 255 / 13%);
   cursor: not-allowed;

@@ -1,18 +1,51 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { IconButton, Tooltip, Typography } from '@mui/material'
+import validator from 'validator';
+
+import { IconButton, List, ListItem, ListItemText, Tooltip, Typography } from '@mui/material'
 import { InputBase } from '@mui/material';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 export const WhiteList = () => {
   const [value, setValue] = useState('');
+  const [whiteListItems, setWhiteListItems] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    checkSyncStorageStatus();
+  }, []);
+
+  const checkSyncStorageStatus = async () => {
+    const { whitelist = [] } = await chrome.storage.sync.get(null);
+
+    setWhiteListItems(whitelist);
+    setIsLoading(false);
+  };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setValue(event.target.value);
   };
 
-  const onFormSubmit = () => {
+  const onFormSubmit = async () => {
+    if (value.length === 0 || !validator.isURL(value)) {
+      return;
+    }
+
+    const parsedURL = new URL(value).host;
+    if (whiteListItems.includes(parsedURL)) return;
+
+    const newValues = [...whiteListItems, parsedURL];
+    setWhiteListItems(newValues);
+    await chrome.storage.sync.set({ whitelist: newValues });
+
     setValue('');
+  };
+
+  const handleRemoveItem = async (item: string) => {
+    const updatedItems = whiteListItems.filter(it => it !== item);
+    setWhiteListItems(updatedItems);
+    await chrome.storage.sync.set({ whitelist: updatedItems });
   };
 
   return (
@@ -21,12 +54,13 @@ export const WhiteList = () => {
         White List
       </Typography>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
+      <div className="whitelist__form" style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
         <InputBase
           type="url"
           value={value}
           onChange={handleInputChange}
-          sx={{ width: '100%', backgroundColor: 'rgba(255, 255, 255, 0.7)', padding: '0 0.4rem', fontFamily: "'VT323', monospace", color: 'purple' }}
+          sx={{ width: '100%', backgroundColor: 'rgba(255, 255, 255, 0.7)', padding: '0 0.4rem', fontFamily: "'VT323', monospace", color: 'rgba(0, 0, 0, 0.7)', '::placeholder': { color: 'rgba(0, 0, 0, 0.3)' } }}
+          placeholder="Website URL"
         />
 
         <Tooltip title="Add URL">
@@ -36,6 +70,44 @@ export const WhiteList = () => {
         </Tooltip>
       </div>
 
+      <List
+        sx={{
+          width: '100%',
+          maxWidth: 367,
+          bgcolor: 'rgba(255, 255, 255, 0.7)',
+          position: 'relative',
+          overflow: 'auto',
+          maxHeight: 236,
+          height: 159,
+          marginTop: '0.4rem',
+          animation: 'fadeIn 0.3s',
+          '& ul': { padding: 0 },
+        }}
+        subheader={<li />}
+      >
+        {!isLoading && (
+          <>
+            {
+              whiteListItems.length > 0 && whiteListItems.map((item, i) => (
+                <ListItem key={`item-${item}-${i}`} sx={{ padding: '0 12px', animation: 'fadeIn 0.3s' }}>
+                  <ListItemText primary={item} sx={{ '& span': { fontFamily: "'VT323', monospace" }, animation: 'fadeIn 0.3s' }} />
+                  <IconButton type="submit" size="small" onClick={() => handleRemoveItem(item)} sx={{ color: 'rgb(205 5 5)', animation: 'fadeIn 0.3s' }}>
+                    <RemoveCircleOutlineIcon fontSize="small" />
+                  </IconButton>
+                </ListItem>
+              ))
+            }
+            {
+              whiteListItems.length === 0 && (
+                <ListItem key={`item-$1`} sx={{ padding: '0 12px', animation: 'fadeIn 0.3s' }}>
+                  <ListItemText primary={`There anot not URLs added`} sx={{ '& span': { fontFamily: "'VT323', monospace", animation: 'fadeIn 0.3s' } }} />
+                </ListItem>
+              )
+            }
+          </>
+        )}
+
+      </List>
     </div>
   );
 };

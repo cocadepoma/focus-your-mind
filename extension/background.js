@@ -1,9 +1,9 @@
 'use strict';
 
-const notAllowedUrls = ['youtube', 'twitter', 'facebook', 'instagram', 'stack', 'deveser'];
+// const notAllowedUrls = ['youtube.com', 'twitter.com', 'facebook.com', 'instagram.com', 'stackoverflow.com'];
+// const allowedUrls = ['deveser.net', 'google.com', 'stackoverflow.com'];
 
 chrome.alarms.onAlarm.addListener(({ name }) => {
-
   if (name === 'focus') {
     let url = chrome.runtime.getURL('popup.html');
     chrome.storage.local.set({ status: 'focusing' });
@@ -28,35 +28,78 @@ chrome.alarms.onAlarm.addListener(({ name }) => {
       url,
     });
   }
-
 });
 
 
 chrome.tabs.onActivated.addListener(async (event) => {
   const { type, status } = await chrome.storage.local.get(null);
 
-  if (type === 'pending' && status === 'focusing') {
-    const [activeTab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+  const {
+    isWhiteListEnabled = false,
+    whitelist = [],
+    isBlackListEnabled = false,
+    blacklist = [],
+  } = await chrome.storage.sync.get(null);
 
-    if (notAllowedUrls.some(u => activeTab.url.includes(u))) {
+  const [activeTab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+  const url = new URL(activeTab.url).host;
 
-      await chrome.scripting.executeScript({
-        target: { tabId: activeTab.id },
-        files: ['./injection.js'],
-      });
+  try {
+    if (type === 'pending' && status === 'focusing') {
+      const isBlackListed = blacklist.some(u => url.includes(u));
+      const isWhiteListed = whitelist.some(u => url.includes(u));
+
+      if ((isBlackListed && isBlackListEnabled) || (isWhiteListEnabled && !isWhiteListed && whitelist.length > 0)) {
+        await chrome.scripting.executeScript({
+          target: { tabId: activeTab.id },
+          files: ['./injection.js'],
+        });
+      } else {
+        cleanScript(activeTab.id);
+      }
+    } else {
+      cleanScript(activeTab.id);
     }
+  } catch (error) {
+    console.warn(error);
   }
 })
 
 chrome.tabs.onUpdated.addListener(async (tabId, { status }, { url }) => {
-  const { type, status: taskStatus } = await chrome.storage.local.get(null);
+  try {
+    const { type, status: taskStatus } = await chrome.storage.local.get(null);
+    const parsedUrl = new URL(url).host;
 
-  if (type === 'pending' && taskStatus === 'focusing') {
-    if (status === 'complete' && notAllowedUrls.some(u => url.includes(u))) {
-      await chrome.scripting.executeScript({
-        target: { tabId },
-        files: ['./injection.js'],
-      });
+    const {
+      isWhiteListEnabled = false,
+      whitelist = [],
+      isBlackListEnabled = false,
+      blacklist = [],
+    } = await chrome.storage.sync.get(null);
+
+    const isBlackListed = blacklist.some(u => parsedUrl.includes(u));
+    const isWhiteListed = whitelist.some(u => parsedUrl.includes(u));
+
+    if (type === 'pending' && taskStatus === 'focusing' && status === 'complete') {
+      if ((isBlackListed && isBlackListEnabled) || (isWhiteListEnabled && !isWhiteListed && whitelist.length > 0)) {
+        await chrome.scripting.executeScript({
+          target: { tabId },
+          files: ['./injection.js'],
+        });
+      } else {
+        cleanScript(tabId);
+      }
+    } else {
+      cleanScript(tabId);
     }
+  } catch (error) {
+    console.warn(error);
   }
 });
+
+const cleanScript = async (tabId) => {
+  await chrome.scripting.executeScript({
+    target: { tabId },
+    files: ['./clean-injection.js'],
+  });
+};

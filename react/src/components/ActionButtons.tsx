@@ -52,8 +52,8 @@ export const ActionButtons = ({
         boxShadow: 'rgb(0 0 0 / 42%) 3px 2px 4px -2px',
         position: 'fixed',
         bottom: 12,
-        left: 12,
-        right: 12,
+        left: 17,
+        right: 17,
         animation: 'fadeIn 0.3s'
       }}
     >
