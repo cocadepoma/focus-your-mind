@@ -43,6 +43,14 @@ export const TabUrlBlocker = ({ handleClose }: Props) => {
     checkSyncStorageStatus();
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem('lastView', 'urlBlocker');
+
+    return () => {
+      localStorage.setItem('lastView', 'home');
+    }
+  }, []);
+
   const checkSyncStorageStatus = async () => {
     const { isWhiteListEnabled = false, isBlackListEnabled = false } = await chrome.storage.sync.get(null);
     setSwitchState({

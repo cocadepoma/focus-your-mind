@@ -58,6 +58,28 @@ export const Home = () => {
     checkAppPeriods();
   }, []);
 
+  useEffect(() => {
+    if (isInIdle || isRestingFinished) {
+      const view = localStorage.getItem('lastView');
+
+      if (!view || view === 'home') {
+        localStorage.setItem('lastView', 'home');
+      }
+
+      else if (view === 'urlBlocker') {
+        setIsURLBlockerTabEnabled(true);
+      }
+
+      else if (view === 'language') {
+        setIsLanguageTabEnabled(true);
+      }
+
+      else if (view === 'sounds') {
+        setIsAlarmTabEnabled(true);
+      }
+    }
+  }, [isURLBlockerTabEnabled, isLanguageTabEnabled, isAlarmTabEnabled]);
+
   const checkAppStatus = async () => {
     const { badge, color, status, type } = await getAppStorageStatus();
 
@@ -82,6 +104,8 @@ export const Home = () => {
   };
 
   const handleStartFocus = () => {
+    localStorage.clear();
+
     const timeToWait = Number(focusPeriod) * 60 * 1000;
     setAppState({ status: 'focusing', type: 'pending' });
     setBadgeIconByColor('red');
@@ -106,6 +130,8 @@ export const Home = () => {
   };
 
   const handleStartRest = () => {
+    localStorage.clear();
+
     chrome.alarms.clearAll();
 
     const timeToWait = Number(restPeriod) * 60 * 1000;
@@ -129,6 +155,8 @@ export const Home = () => {
   };
 
   const handleStopFocus = () => {
+    localStorage.clear();
+
     chrome.alarms.clearAll();
 
     setBadgeIconByColor('yellow');
@@ -140,6 +168,8 @@ export const Home = () => {
   };
 
   const handleClearAlarms = () => {
+    localStorage.clear();
+
     chrome.alarms.clearAll();
 
     setAppState(initialState);
