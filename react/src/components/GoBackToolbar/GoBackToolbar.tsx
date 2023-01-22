@@ -1,11 +1,15 @@
 import { IconButton, Tooltip } from '@mui/material'
 import ForwardIcon from '@mui/icons-material/Forward';
+import { LanguageContext } from '../../contexts/LanguageContext/LanguageContext';
+import { useContext } from 'react';
 
 interface Props {
   handleClose: () => void;
 }
 
 export const GoBackToolbar = ({ handleClose }: Props) => {
+  const { tr } = useContext(LanguageContext);
+
   return (
     <div
       style={{
@@ -21,7 +25,7 @@ export const GoBackToolbar = ({ handleClose }: Props) => {
         animation: 'fadeIn 0.3s'
       }}
     >
-      <Tooltip title="Go back">
+      <Tooltip title={tr("Go back")}>
         <IconButton size="small" onClick={handleClose} sx={{ color: 'white', position: 'absolute', left: 8, bottom: 1, animation: 'fadeIn 0.3s' }}>
           <ForwardIcon fontSize="small" sx={{ transform: 'rotate(180deg)' }} />
         </IconButton>

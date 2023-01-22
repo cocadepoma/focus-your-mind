@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useRef, useState } from "react";
+import { MouseEvent, useContext, useEffect, useRef, useState } from "react";
 
 import { FormControl, FormControlLabel, IconButton, Radio, RadioGroup, Tooltip, Typography } from "@mui/material";
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
@@ -10,12 +10,15 @@ import { SOUND_ALARMS } from "../../constants";
 import './styles.css';
 import { SoundFile } from "../../types/types";
 import { StopCircleOutlined } from "@mui/icons-material";
+import { LanguageContext } from "../../contexts/LanguageContext/LanguageContext";
 
 interface Props {
   handleClose: () => void;
 }
 
 export const TabAlarmSound = ({ handleClose }: Props) => {
+  const { tr } = useContext(LanguageContext);
+
   const [value, setValue] = useState('');
   const [currentSound, setCurrentSound] = useState<SoundFile>();
   const [isLoading, setIsLoading] = useState(true);
@@ -74,7 +77,7 @@ export const TabAlarmSound = ({ handleClose }: Props) => {
   return (
     <div className="tab-alarm-sound__container">
       <Typography variant="h6" sx={{ fontFamily: "'VT323', monospace", textAlign: 'center', color: '#fff', animation: 'fadeIn 0.3s' }}>
-        Alarm Sounds
+        {tr('Alarm Sounds')}
       </Typography>
 
       <FormControl fullWidth>
@@ -103,14 +106,14 @@ export const TabAlarmSound = ({ handleClose }: Props) => {
               {
                 currentSound?.value === sound.value
                   ? (
-                    <Tooltip title={`Stop ${sound.label} sound`}>
+                    <Tooltip title={`${tr('Stop')} ${sound.label} ${tr('sound')}`}>
                       <IconButton size="small" onClick={handleStopSound} sx={{ color: 'white', animation: 'fadeIn 0.3s' }}>
                         <StopCircleOutlined fontSize="small" />
                       </IconButton>
                     </Tooltip>
                   )
                   : (
-                    <Tooltip title={`Play ${sound.label} sound`}>
+                    <Tooltip title={`${tr('Play')} ${sound.label} ${tr('sound')}`}>
                       <IconButton size="small" onClick={(e) => handlePlaySound(e, sound.value)} sx={{ color: 'white', animation: 'fadeIn 0.3s' }}>
                         <PlayCircleOutlineIcon fontSize="small" />
                       </IconButton>

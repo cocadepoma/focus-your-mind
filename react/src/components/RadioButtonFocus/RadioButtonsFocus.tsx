@@ -14,7 +14,7 @@ interface Props {
 export const RowRadioButtonsFocus = ({ value, onChange, values, label }: Props) => {
   return (
     <div>
-      <Typography variant="body1" sx={{ fontFamily: "'VT323', monospace", fontSize: '1.3rem', userSelect: 'none', color: 'white' }}>{label}</Typography>
+      <Typography variant="body1" sx={{ fontFamily: "'VT323', monospace", fontSize: '1.1rem', userSelect: 'none', color: 'white' }}>{label}</Typography>
 
       <FormControl fullWidth>
         <RadioGroup
@@ -32,7 +32,7 @@ export const RowRadioButtonsFocus = ({ value, onChange, values, label }: Props) 
                 '& .PrivateSwitchBase-root:hover': {
                   backgroundColor: 'rgb(244 176 243 / 11%)'
                 },
-                '& span.MuiFormControlLabel-label': { fontSize: '1.3rem', letterSpacing: '1.2px', fontFamily: "'VT323', monospace", userSelect: 'none', color: 'white' },
+                '& span.MuiFormControlLabel-label': { fontSize: '1.1rem', letterSpacing: '1.2px', fontFamily: "'VT323', monospace", userSelect: 'none', color: 'white', paddingLeft: '.4rem' },
                 marginRight: i - 1 === values.length ? 0 : 'inherit'
               }}
               value={val}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { FormControlLabel, IconButton, Switch, Tooltip, Typography } from "@mui/material";
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
@@ -6,6 +6,7 @@ import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import { GoBackToolbar } from "../GoBackToolbar/GoBackToolbar";
 import { WhiteList } from "./WhiteList/WhiteList";
 import { BlackList } from "./BlackList/BlackList";
+import { LanguageContext } from "../../contexts/LanguageContext/LanguageContext";
 
 
 const switchStyles = {
@@ -31,6 +32,8 @@ interface Props {
 }
 
 export const TabUrlBlocker = ({ handleClose }: Props) => {
+  const { tr } = useContext(LanguageContext);
+
   const [switchState, setSwitchState] = useState({
     isWhiteListEnabled: false,
     isBlackListEnabled: false,
@@ -115,7 +118,7 @@ export const TabUrlBlocker = ({ handleClose }: Props) => {
     <div style={{ animation: 'fadeIn 0.3s' }}>
       {!isBlackListViewEnabled && !isWhiteListViewEnabled && (
         <Typography variant="h6" sx={{ fontFamily: "'VT323', monospace", textAlign: 'center', color: '#fff', animation: 'fadeIn 0.3s' }}>
-          URL Blocker
+          {tr('URL Blocker')}
         </Typography>
       )}
 
@@ -124,7 +127,7 @@ export const TabUrlBlocker = ({ handleClose }: Props) => {
           <div className="tab-url-blocker__container" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '2.8rem' }}>
               <FormControlLabel
-                label="BlackList"
+                label={tr("Blacklist")}
                 control={
                   <Switch
                     sx={switchStyles}
@@ -133,19 +136,19 @@ export const TabUrlBlocker = ({ handleClose }: Props) => {
                   />
                 }
               />
-              <Tooltip title="Add URL to Blacklist">
+              <Tooltip title={tr("Add URL to Blacklist")}>
                 <IconButton disabled={!switchState.isBlackListEnabled} size="small" onClick={() => setIsBlackListViewEnabled(true)} sx={{ color: 'white', animation: 'fadeIn 0.3s' }}>
                   <PlaylistAddIcon fontSize="medium" />
                 </IconButton>
               </Tooltip>
             </div>
             <Typography variant="body1" sx={{ fontFamily: "'VT323', monospace", color: 'rgba(255,255,255,0.75)', animation: 'fadeIn 0.3s', fontSize: '0.8rem', marginTop: '-0.5rem' }}>
-              Pages added in the blacklist will be blocked in focus time.
+              {tr('Pages added in the blacklist will be blocked in focus time.')}
             </Typography>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '3rem' }}>
               <FormControlLabel
-                label="Whitelist"
+                label={tr("Whitelist")}
                 control={
                   <Switch
                     sx={switchStyles}
@@ -155,14 +158,14 @@ export const TabUrlBlocker = ({ handleClose }: Props) => {
                 }
               />
 
-              <Tooltip title="Add URL to Whitelist">
+              <Tooltip title={tr("Add URL to Whitelist")}>
                 <IconButton disabled={!switchState.isWhiteListEnabled} size="small" onClick={() => setIsWhiteListViewEnabled(true)} sx={{ color: 'white', animation: 'fadeIn 0.3s' }}>
                   <PlaylistAddIcon fontSize="medium" />
                 </IconButton>
               </Tooltip>
             </div>
             <Typography variant="body1" sx={{ fontFamily: "'VT323', monospace", color: 'rgba(255,255,255,0.75)', animation: 'fadeIn 0.3s', fontSize: '0.8rem', marginTop: '-0.5rem' }}>
-              Only pages included in the whitelist will be allowed in focus time.
+              {tr('Only pages included in the whitelist will be allowed in focus time.')}
             </Typography>
           </div>
         )

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 import Countdown, { zeroPad } from "react-countdown";
 
@@ -21,6 +21,7 @@ import {
 import { State, Status } from "../types/types";
 
 import './styles.css';
+import { LanguageContext } from "../contexts/LanguageContext/LanguageContext";
 interface AppState {
   status: Status,
   type: State,
@@ -32,6 +33,8 @@ const initialState: AppState = {
 };
 
 export const Home = () => {
+  const { tr } = useContext(LanguageContext);
+
   const divRef = useRef<HTMLDivElement>(null);
   const [appState, setAppState] = useState<AppState>({
     status: 'focusing',
@@ -39,8 +42,8 @@ export const Home = () => {
   });
 
   const [appTime, setAppTime] = useState<number>(Date.now() + 1000);
-  const [focusPeriod, setFocusPeriod] = useState('0.1');
-  const [restPeriod, setRestPeriod] = useState('0.1');
+  const [focusPeriod, setFocusPeriod] = useState('30');
+  const [restPeriod, setRestPeriod] = useState('5');
   const [isURLBlockerTabEnabled, setIsURLBlockerTabEnabled] = useState(false);
   const [isLanguageTabEnabled, setIsLanguageTabEnabled] = useState(false);
   const [isAlarmTabEnabled, setIsAlarmTabEnabled] = useState(false);
@@ -226,9 +229,9 @@ export const Home = () => {
                     </span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-evenly', marginTop: '0.4rem' }}>
-                    <RowRadioButtonsFocus onChange={onChangeFocusPeriod} value={focusPeriod} values={['0.1', '35', '40']} label="Focus Time" />
+                    <RowRadioButtonsFocus onChange={onChangeFocusPeriod} value={focusPeriod} values={['30', '35', '40']} label={tr('Focus Time')} />
                     <div style={{ height: '1rem' }} />
-                    <RowRadioButtonsFocus onChange={onChangeRestPeriod} value={restPeriod} values={['0.1', '8', '10']} label="Rest Time" />
+                    <RowRadioButtonsFocus onChange={onChangeRestPeriod} value={restPeriod} values={['5', '8', '10']} label={tr('Rest Time')} />
                   </div>
                 </>
               )

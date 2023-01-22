@@ -8,6 +8,17 @@ import ForwardIcon from '@mui/icons-material/Forward';
 import HttpIcon from '@mui/icons-material/Http';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import PublicIcon from '@mui/icons-material/Public';
+import { LanguageContext } from '../../contexts/LanguageContext/LanguageContext';
+import { useContext } from 'react';
+
+const iconButtonStyles = {
+  color: 'white',
+  position: 'absolute',
+  left: 8,
+  bottom: 1,
+  animation: 'fadeIn 0.3s',
+};
+
 interface Props {
   isFocusing: boolean;
   isFinished: boolean;
@@ -42,6 +53,8 @@ export const ActionButtons = ({
   handleOpenAlarmTab,
   handleOpenLanguageTab,
 }: Props) => {
+  const { tr } = useContext(LanguageContext);
+
   return (
     <div
       style={{
@@ -60,26 +73,26 @@ export const ActionButtons = ({
       {
         (isInIdle || isRestingFinished) && (
           <>
-            <Tooltip title="URL Blocker">
-              <IconButton size="small" onClick={handleOpenURLTab} sx={{ color: 'white', position: 'absolute', left: 8, bottom: 1, animation: 'fadeIn 0.3s' }}>
+            <Tooltip title={tr('URL Blocker')}>
+              <IconButton size="small" onClick={handleOpenURLTab} sx={iconButtonStyles}>
                 <HttpIcon fontSize="small" />
               </IconButton>
             </Tooltip>
 
-            <Tooltip title="Sounds">
-              <IconButton size="small" onClick={handleOpenAlarmTab} sx={{ color: 'white', position: 'absolute', left: 45, bottom: 1, animation: 'fadeIn 0.3s' }}>
+            <Tooltip title={tr('Alarm Sounds')}>
+              <IconButton size="small" onClick={handleOpenAlarmTab} sx={{ ...iconButtonStyles, left: 45 }}>
                 <VolumeUpIcon fontSize="small" />
               </IconButton>
             </Tooltip>
 
-            <Tooltip title="Language">
-              <IconButton size="small" onClick={handleOpenLanguageTab} sx={{ color: 'white', position: 'absolute', left: 82, bottom: 1, animation: 'fadeIn 0.3s' }}>
+            <Tooltip title={tr('Language')}>
+              <IconButton size="small" onClick={handleOpenLanguageTab} sx={{ ...iconButtonStyles, left: 82 }}>
                 <PublicIcon fontSize="small" />
               </IconButton>
             </Tooltip>
 
-            <Tooltip title="Start Focus Time">
-              <IconButton size="small" onClick={handleStartFocus} sx={{ color: 'white', position: 'absolute', right: 8, bottom: 1, animation: 'fadeIn 0.3s' }}>
+            <Tooltip title={tr('Start Focus Time')}>
+              <IconButton size="small" onClick={handleStartFocus} sx={{ ...iconButtonStyles, right: 8, left: 'unset' }}>
                 <PlayArrowIcon fontSize="small" />
               </IconButton>
             </Tooltip>
@@ -90,8 +103,8 @@ export const ActionButtons = ({
       {
         isFocusing && isFinished && (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <Tooltip title={'Start Rest Time'}>
-              <IconButton size="small" onClick={handleStartRest} sx={{ color: 'white', position: 'absolute', right: 8, bottom: 1, animation: 'fadeIn 0.3s' }}>
+            <Tooltip title={tr('Start Rest Time')}>
+              <IconButton size="small" onClick={handleStartRest} sx={{ ...iconButtonStyles, right: 8, left: 'unset' }}>
                 <ForwardIcon fontSize="small" />
               </IconButton>
             </Tooltip>
@@ -101,7 +114,7 @@ export const ActionButtons = ({
 
       {
         (!isInIdle && !isRestingFinished) && (
-          <Tooltip title="Stop">
+          <Tooltip title={tr('Stop')}>
             <IconButton
               size="small"
               onClick={handleClearAlarms}
@@ -122,8 +135,8 @@ export const ActionButtons = ({
 
       {
         isFocusing && isPending && (
-          <Tooltip title={'Skip and Rest'}>
-            <IconButton size="small" onClick={handleStopFocus} sx={{ color: 'white', position: 'absolute', right: 8, bottom: 1, animation: 'fadeIn 0.3s' }}>
+          <Tooltip title={tr('Skip and Rest')}>
+            <IconButton size="small" onClick={handleStopFocus} sx={{ ...iconButtonStyles, right: 8, left: 'unset' }}>
               <DirectionsRunIcon fontSize="small" />
             </IconButton>
           </Tooltip>

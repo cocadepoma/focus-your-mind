@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import validator from 'validator';
 
@@ -6,8 +6,11 @@ import { Alert, IconButton, List, ListItem, ListItemText, Snackbar, Tooltip, Typ
 import { InputBase } from '@mui/material';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import { LanguageContext } from '../../../contexts/LanguageContext/LanguageContext';
 
 export const WhiteList = () => {
+  const { tr } = useContext(LanguageContext);
+
   const [value, setValue] = useState('');
   const [message, setMessage] = useState('');
 
@@ -58,7 +61,7 @@ export const WhiteList = () => {
   return (
     <div className="whitelist__container">
       <Typography variant="h6" sx={{ fontFamily: "'VT323', monospace", textAlign: 'center', color: '#fff', animation: 'fadeIn 0.3s' }}>
-        White List
+        {tr("Whitelist")}
       </Typography>
 
       <div className="whitelist__form" style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
@@ -67,10 +70,10 @@ export const WhiteList = () => {
           value={value}
           onChange={handleInputChange}
           sx={{ width: '100%', backgroundColor: 'rgba(255, 255, 255, 0.7)', padding: '0 0.4rem', fontFamily: "'VT323', monospace", color: 'rgba(0, 0, 0, 0.7)', '::placeholder': { color: 'rgba(0, 0, 0, 0.3)' } }}
-          placeholder="https://website-to-allow.com"
+          placeholder={tr("https://website-to-allow.com")}
         />
 
-        <Tooltip title="Add URL">
+        <Tooltip title={tr("Add URL")}>
           <IconButton type="submit" disabled={value.length === 0 || false} size="small" onClick={onFormSubmit} sx={{ color: 'white', animation: 'fadeIn 0.3s' }}>
             <KeyboardReturnIcon fontSize="small" />
           </IconButton>
@@ -98,16 +101,18 @@ export const WhiteList = () => {
               whiteListItems.length > 0 && whiteListItems.map((item, i) => (
                 <ListItem key={`item-${item}-${i}`} sx={{ padding: '0 12px', animation: 'fadeIn 0.3s' }}>
                   <ListItemText primary={item} sx={{ '& span': { fontFamily: "'VT323', monospace" }, animation: 'fadeIn 0.3s' }} />
-                  <IconButton type="submit" size="small" onClick={() => handleRemoveItem(item)} sx={{ color: 'rgb(205 5 5)', animation: 'fadeIn 0.3s' }}>
-                    <RemoveCircleOutlineIcon fontSize="small" />
-                  </IconButton>
+                  <Tooltip title={tr("Delete URL")}>
+                    <IconButton type="submit" size="small" onClick={() => handleRemoveItem(item)} sx={{ color: 'rgb(205 5 5)', animation: 'fadeIn 0.3s' }}>
+                      <RemoveCircleOutlineIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
                 </ListItem>
               ))
             }
             {
               whiteListItems.length === 0 && (
                 <ListItem key={`item-$1`} sx={{ padding: '0 12px', animation: 'fadeIn 0.3s' }}>
-                  <ListItemText primary={`There anot not URLs added`} sx={{ '& span': { fontFamily: "'VT323', monospace", animation: 'fadeIn 0.3s' } }} />
+                  <ListItemText primary={tr('There are not URLs added')} sx={{ '& span': { fontFamily: "'VT323', monospace", animation: 'fadeIn 0.3s' } }} />
                 </ListItem>
               )
             }
@@ -117,7 +122,7 @@ export const WhiteList = () => {
 
       <Snackbar open={message.length > 0} autoHideDuration={3000} onClose={() => setMessage('')}>
         <Alert onClose={() => setMessage('')} severity="error" variant="filled" sx={{ width: '100%', fontFamily: "'VT323', monospace" }}>
-          {message}
+          {tr(message)}
         </Alert>
       </Snackbar>
     </div>

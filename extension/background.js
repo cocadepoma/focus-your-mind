@@ -1,13 +1,10 @@
 'use strict';
 
 chrome.alarms.onAlarm.addListener(async ({ name }) => {
-  const { sound = 'ping1' } = await chrome.storage.sync.get(null);
-
   if (name === 'focus') {
     let url = chrome.runtime.getURL('popup.html');
     chrome.storage.local.set({ status: 'focusing' });
     chrome.storage.local.set({ type: 'finish' });
-    url += `?volume=1&src=./assets/sound_${sound}.mp3&length=10000&icon=yellow`;
 
     chrome.tabs.create({
       active: true,
@@ -19,8 +16,6 @@ chrome.alarms.onAlarm.addListener(async ({ name }) => {
     let url = chrome.runtime.getURL('popup.html');
     chrome.storage.local.set({ status: 'resting' });
     chrome.storage.local.set({ type: 'finish' });
-
-    url += `?volume=1&src=./assets/sound_${sound}.mp3&length=10000&icon=purple`;
 
     chrome.tabs.create({
       active: true,
@@ -40,24 +35,26 @@ chrome.tabs.onActivated.addListener(async (event) => {
     blacklist = [],
   } = await chrome.storage.sync.get(null);
 
-  const [activeTab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-  const url = new URL(activeTab.url).host;
-
   try {
+    const [activeTab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+    const url = new URL(activeTab.url).host;
+
     if (type === 'pending' && status === 'focusing') {
       const isBlackListed = blacklist.some(u => url.includes(u));
       const isWhiteListed = whitelist.some(u => url.includes(u));
 
       if ((isBlackListed && isBlackListEnabled) || (isWhiteListEnabled && !isWhiteListed && whitelist.length > 0)) {
+        if (activeTab.url.includes('chrome-extension://') || activeTab.url.includes('chrome://')) return;
+
         await chrome.scripting.executeScript({
           target: { tabId: activeTab.id },
           files: ['./injection.js'],
         });
       } else {
-        cleanScript(activeTab.id);
+        cleanScript(activeTab.id, activeTab.url);
       }
     } else {
-      cleanScript(activeTab.id);
+      cleanScript(activeTab.id, activeTab.url);
     }
   } catch (error) {
     console.warn(error);
@@ -81,22 +78,26 @@ chrome.tabs.onUpdated.addListener(async (tabId, { status }, { url }) => {
 
     if (type === 'pending' && taskStatus === 'focusing' && status === 'complete') {
       if ((isBlackListed && isBlackListEnabled) || (isWhiteListEnabled && !isWhiteListed && whitelist.length > 0)) {
+        if (url.includes('chrome-extension://') || url.includes('chrome://')) return;
+
         await chrome.scripting.executeScript({
           target: { tabId },
           files: ['./injection.js'],
         });
       } else {
-        cleanScript(tabId);
+        cleanScript(tabId, url);
       }
     } else {
-      cleanScript(tabId);
+      cleanScript(tabId, url);
     }
   } catch (error) {
     console.warn(error);
   }
 });
 
-const cleanScript = async (tabId) => {
+const cleanScript = async (tabId, url) => {
+  if (url.includes('chrome-extension://') || url.includes('chrome://')) return;
+
   await chrome.scripting.executeScript({
     target: { tabId },
     files: ['./clean-injection.js'],
