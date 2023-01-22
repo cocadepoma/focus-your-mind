@@ -7,9 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "clean": "rm -rf ../extension/assets && rm ../extension/index.html",
+    "clean": "rm -rf ../extension/assets || true && rm ../extension/index.html || true",
     "copy": "cp -R ./dist/assets ../extension && cp ./dist/index.html ../extension",
-    "prod": "yarn build && yarn clean && yarn copy"
+    "move": "yarn build && yarn clean && yarn copy"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
