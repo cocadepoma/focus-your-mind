@@ -1,10 +1,11 @@
-import { FormControlLabel, IconButton, Switch, Tooltip, Typography } from "@mui/material";
-import ForwardIcon from '@mui/icons-material/Forward';
-import { GoBackToolbar } from "./GoBackToolbar";
 import { useEffect, useState } from "react";
+
+import { FormControlLabel, IconButton, Switch, Tooltip, Typography } from "@mui/material";
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
-import { WhiteList } from "./WhiteList";
-import { BlackList } from "./BlackList";
+
+import { GoBackToolbar } from "../GoBackToolbar/GoBackToolbar";
+import { WhiteList } from "./WhiteList/WhiteList";
+import { BlackList } from "./BlackList/BlackList";
 
 
 const switchStyles = {
@@ -41,14 +42,6 @@ export const TabUrlBlocker = ({ handleClose }: Props) => {
 
   useEffect(() => {
     checkSyncStorageStatus();
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('lastView', 'urlBlocker');
-
-    return () => {
-      localStorage.setItem('lastView', 'home');
-    }
   }, []);
 
   const checkSyncStorageStatus = async () => {

@@ -2,24 +2,25 @@ import React, { useEffect, useState } from 'react';
 
 import validator from 'validator';
 
-import { IconButton, List, ListItem, ListItemText, Tooltip, Typography } from '@mui/material'
+import { Alert, IconButton, List, ListItem, ListItemText, Snackbar, Tooltip, Typography } from '@mui/material'
 import { InputBase } from '@mui/material';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
-export const WhiteList = () => {
+export const BlackList = () => {
   const [value, setValue] = useState('');
-  const [whiteListItems, setWhiteListItems] = useState<string[]>([]);
+  const [blackListItems, setBlackListItems] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isErrorOpen, setIsErrorOpen] = useState(false);
 
   useEffect(() => {
     checkSyncStorageStatus();
   }, []);
 
   const checkSyncStorageStatus = async () => {
-    const { whitelist = [] } = await chrome.storage.sync.get(null);
+    const { blacklist = [] } = await chrome.storage.sync.get(null);
 
-    setWhiteListItems(whitelist);
+    setBlackListItems(blacklist);
     setIsLoading(false);
   };
 
@@ -33,34 +34,34 @@ export const WhiteList = () => {
     }
 
     const parsedURL = new URL(value).host;
-    if (whiteListItems.includes(parsedURL)) return;
+    if (blackListItems.includes(parsedURL)) return;
 
-    const newValues = [...whiteListItems, parsedURL];
-    setWhiteListItems(newValues);
-    await chrome.storage.sync.set({ whitelist: newValues });
+    const newValues = [...blackListItems, parsedURL];
+    setBlackListItems(newValues);
+    await chrome.storage.sync.set({ blacklist: newValues });
 
     setValue('');
   };
 
   const handleRemoveItem = async (item: string) => {
-    const updatedItems = whiteListItems.filter(it => it !== item);
-    setWhiteListItems(updatedItems);
-    await chrome.storage.sync.set({ whitelist: updatedItems });
+    const updatedItems = blackListItems.filter(it => it !== item);
+    setBlackListItems(updatedItems);
+    await chrome.storage.sync.set({ blacklist: updatedItems });
   };
 
   return (
-    <div className="whitelist__container">
+    <div className="blacklist__container">
       <Typography variant="h6" sx={{ fontFamily: "'VT323', monospace", textAlign: 'center', color: '#fff', animation: 'fadeIn 0.3s' }}>
-        White List
+        Black List
       </Typography>
 
-      <div className="whitelist__form" style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
+      <div className="blacklist__form" style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
         <InputBase
           type="url"
           value={value}
           onChange={handleInputChange}
           sx={{ width: '100%', backgroundColor: 'rgba(255, 255, 255, 0.7)', padding: '0 0.4rem', fontFamily: "'VT323', monospace", color: 'rgba(0, 0, 0, 0.7)', '::placeholder': { color: 'rgba(0, 0, 0, 0.3)' } }}
-          placeholder="Website URL"
+          placeholder="https://website-to-block.com"
         />
 
         <Tooltip title="Add URL">
@@ -80,15 +81,15 @@ export const WhiteList = () => {
           maxHeight: 236,
           height: 159,
           marginTop: '0.4rem',
-          animation: 'fadeIn 0.3s',
           '& ul': { padding: 0 },
+          animation: 'fadeIn 0.3s',
         }}
         subheader={<li />}
       >
         {!isLoading && (
           <>
             {
-              whiteListItems.length > 0 && whiteListItems.map((item, i) => (
+              blackListItems.length > 0 && blackListItems.map((item, i) => (
                 <ListItem key={`item-${item}-${i}`} sx={{ padding: '0 12px', animation: 'fadeIn 0.3s' }}>
                   <ListItemText primary={item} sx={{ '& span': { fontFamily: "'VT323', monospace" }, animation: 'fadeIn 0.3s' }} />
                   <IconButton type="submit" size="small" onClick={() => handleRemoveItem(item)} sx={{ color: 'rgb(205 5 5)', animation: 'fadeIn 0.3s' }}>
@@ -98,16 +99,21 @@ export const WhiteList = () => {
               ))
             }
             {
-              whiteListItems.length === 0 && (
+              blackListItems.length === 0 && (
                 <ListItem key={`item-$1`} sx={{ padding: '0 12px', animation: 'fadeIn 0.3s' }}>
-                  <ListItemText primary={`There anot not URLs added`} sx={{ '& span': { fontFamily: "'VT323', monospace", animation: 'fadeIn 0.3s' } }} />
+                  <ListItemText primary={`There anot not URLs added`} sx={{ '& span': { fontFamily: "'VT323', monospace" }, animation: 'fadeIn 0.3s' }} />
                 </ListItem>
               )
             }
           </>
         )}
-
       </List>
+
+      <Snackbar open={isErrorOpen} autoHideDuration={6000} onClose={() => setIsErrorOpen(false)}>
+        <Alert onClose={() => setIsErrorOpen(false)} severity="success" sx={{ width: '100%' }}>
+          You must introduce a valid URL
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

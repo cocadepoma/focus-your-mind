@@ -1,0 +1,31 @@
+.MuiButtonBase-root.MuiRadio-root.MuiRadio-colorError.Mui-checked {
+  color: #f292fa8f;
+}
+
+.MuiButtonBase-root.MuiRadio-root.MuiRadio-colorError.Mui-checked svg:first-child {
+  color: #ffffff;
+}
+
+.PrivateSwitchBase-root.MuiRadio-root.MuiRadio-colorError {
+  color: rgb(0 0 0 / 45%)
+}
+
+span.MuiTypography-body1.MuiFormControlLabel-label {
+  font-family: 'VT323', monospace;
+  color: #ffffff !important;
+  padding-left: 1rem;
+}
+
+.tab-url-blocker__container .MuiIconButton-root.MuiIconButton-sizeSmall,
+.blacklist__form .MuiIconButton-root.MuiIconButton-sizeSmall,
+.whitelist__form .MuiIconButton-root.MuiIconButton-sizeSmall {
+  background-color: #f6e0e02b;
+}
+
+.tab-url-blocker__container .MuiIconButton-root.Mui-disabled.MuiIconButton-sizeSmall,
+.blacklist__form .MuiIconButton-root.Mui-disabled.MuiIconButton-sizeSmall,
+.whitelist__form .MuiIconButton-root.Mui-disabled.MuiIconButton-sizeSmall {
+  background-color: #f6e0e008;
+  color: rgb(255 255 255 / 13%);
+  cursor: not-allowed;
+}

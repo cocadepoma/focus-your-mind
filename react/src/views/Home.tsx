@@ -2,17 +2,23 @@ import { useEffect, useRef, useState } from "react";
 
 import Countdown, { zeroPad } from "react-countdown";
 
-import { RowRadioButtonsFocus } from "../components/RadioButtonsFocus";
+import {
+  InfoText,
+  ActionButtons,
+  TabUrlBlocker,
+  TabAlarmSound,
+  TabLanguage,
+  RowRadioButtonsFocus
+} from "../components";
 
-import { getAppStorageStatus, getAppSyncPeriods, getBackgroundGif, setBadgeIconByColor } from "../utils/utils";
+import {
+  getAppStorageStatus,
+  getAppSyncPeriods,
+  getBackgroundGif,
+  setBadgeIconByColor
+} from "../utils/utils";
+
 import { State, Status } from "../types/types";
-
-import { InfoText } from "../components/InfoText";
-import { ActionButtons } from "../components/ActionButtons";
-
-import { TabUrlBlocker } from "../components/TabUrlBlocker";
-import { TabAlarmSound } from "../components/TabAlarmSound";
-import { TabLanguage } from "../components/TabLanguage";
 
 import './styles.css';
 interface AppState {
@@ -33,8 +39,8 @@ export const Home = () => {
   });
 
   const [appTime, setAppTime] = useState<number>(Date.now() + 1000);
-  const [focusPeriod, setFocusPeriod] = useState('30');
-  const [restPeriod, setRestPeriod] = useState('5');
+  const [focusPeriod, setFocusPeriod] = useState('0.1');
+  const [restPeriod, setRestPeriod] = useState('0.1');
   const [isURLBlockerTabEnabled, setIsURLBlockerTabEnabled] = useState(false);
   const [isLanguageTabEnabled, setIsLanguageTabEnabled] = useState(false);
   const [isAlarmTabEnabled, setIsAlarmTabEnabled] = useState(false);
@@ -57,28 +63,6 @@ export const Home = () => {
     checkAppTimer();
     checkAppPeriods();
   }, []);
-
-  useEffect(() => {
-    if (isInIdle || isRestingFinished) {
-      const view = localStorage.getItem('lastView');
-
-      if (!view || view === 'home') {
-        localStorage.setItem('lastView', 'home');
-      }
-
-      else if (view === 'urlBlocker') {
-        setIsURLBlockerTabEnabled(true);
-      }
-
-      else if (view === 'language') {
-        setIsLanguageTabEnabled(true);
-      }
-
-      else if (view === 'sounds') {
-        setIsAlarmTabEnabled(true);
-      }
-    }
-  }, [isURLBlockerTabEnabled, isLanguageTabEnabled, isAlarmTabEnabled]);
 
   const checkAppStatus = async () => {
     const { badge, color, status, type } = await getAppStorageStatus();
@@ -241,10 +225,10 @@ export const Home = () => {
                       {zeroPad(0)}
                     </span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                    <RowRadioButtonsFocus onChange={onChangeFocusPeriod} value={focusPeriod} values={['30', '35', '40']} label="Focus Time" />
+                  <div style={{ display: 'flex', justifyContent: 'space-evenly', marginTop: '0.4rem' }}>
+                    <RowRadioButtonsFocus onChange={onChangeFocusPeriod} value={focusPeriod} values={['0.1', '35', '40']} label="Focus Time" />
                     <div style={{ height: '1rem' }} />
-                    <RowRadioButtonsFocus onChange={onChangeRestPeriod} value={restPeriod} values={['5', '8', '10']} label="Rest Time" />
+                    <RowRadioButtonsFocus onChange={onChangeRestPeriod} value={restPeriod} values={['0.1', '8', '10']} label="Rest Time" />
                   </div>
                 </>
               )
@@ -278,5 +262,3 @@ export const Home = () => {
     </div >
   );
 };
-
-// const pa = new RegExp(`^[a-zA-Z0-9-]*$`)

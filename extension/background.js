@@ -1,14 +1,13 @@
 'use strict';
 
-// const notAllowedUrls = ['youtube.com', 'twitter.com', 'facebook.com', 'instagram.com', 'stackoverflow.com'];
-// const allowedUrls = ['deveser.net', 'google.com', 'stackoverflow.com'];
+chrome.alarms.onAlarm.addListener(async ({ name }) => {
+  const { sound = 'ping1' } = await chrome.storage.sync.get(null);
 
-chrome.alarms.onAlarm.addListener(({ name }) => {
   if (name === 'focus') {
     let url = chrome.runtime.getURL('popup.html');
     chrome.storage.local.set({ status: 'focusing' });
     chrome.storage.local.set({ type: 'finish' });
-    url += '?volume=0.8&src=./sounds/src_tones_ping1.mp3&length=10000&icon=yellow&text=Time+to+rest';
+    url += `?volume=1&src=./assets/sound_${sound}.mp3&length=10000&icon=yellow`;
 
     chrome.tabs.create({
       active: true,
@@ -21,7 +20,7 @@ chrome.alarms.onAlarm.addListener(({ name }) => {
     chrome.storage.local.set({ status: 'resting' });
     chrome.storage.local.set({ type: 'finish' });
 
-    url += '?volume=0.8&src=./sounds/src_tones_ping1.mp3&length=10000&icon=purple&text=Time+to+focus';
+    url += `?volume=1&src=./assets/sound_${sound}.mp3&length=10000&icon=purple`;
 
     chrome.tabs.create({
       active: true,

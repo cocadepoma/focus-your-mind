@@ -1,0 +1,19 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    color: rgb(255, 0, 0);
+  }
+
+  100% {
+    color: rgb(249, 125, 125);
+  }
+}
