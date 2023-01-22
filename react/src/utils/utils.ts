@@ -62,8 +62,8 @@ export const getAppStorageStatus = async () => {
 export const getAppSyncPeriods = async () => {
   const params = await chrome.storage.sync.get(null);
 
-  const focusPeriod = params.focusPeriod || '40';
-  const restPeriod = params.restPeriod || '10';
+  const focusPeriod = params.focusPeriod || '35';
+  const restPeriod = params.restPeriod || '8';
 
   return {
     focusPeriod,

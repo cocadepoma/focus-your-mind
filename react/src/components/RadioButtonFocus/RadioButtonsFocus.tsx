@@ -14,7 +14,7 @@ interface Props {
 export const RowRadioButtonsFocus = ({ value, onChange, values, label }: Props) => {
   return (
     <div>
-      <Typography variant="body1" sx={{ fontFamily: "'VT323', monospace", fontSize: '1.1rem', userSelect: 'none', color: 'white' }}>{label}</Typography>
+      <Typography variant="body1" sx={{ fontFamily: "'VT323', monospace", fontSize: '1.1rem', userSelect: 'none', color: 'white', textAlign: 'center' }}>{label}</Typography>
 
       <FormControl fullWidth>
         <RadioGroup
@@ -29,6 +29,8 @@ export const RowRadioButtonsFocus = ({ value, onChange, values, label }: Props) 
             <FormControlLabel
               key={`${val}-${i}`}
               sx={{
+                display: 'grid',
+                gridTemplateColumns: '3rem 1fr',
                 '& .PrivateSwitchBase-root:hover': {
                   backgroundColor: 'rgb(244 176 243 / 11%)'
                 },
